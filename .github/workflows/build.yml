@@ -69,7 +69,7 @@ jobs:
 
       - uses: beyondstorage/setup-hdfs@master
         with:
-          hdfs-version: '3.3.6'
+          hdfs-version: '2.10.2'
 
       - name: Set Hadoop env
         run: |
