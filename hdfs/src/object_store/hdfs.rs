@@ -713,6 +713,7 @@ mod tests {
         let fetches = do_fetch(vec![], 0).await;
         assert_eq!(fetches, vec![]);
 
+        #[allow(clippy::single_range_in_vec_init)]
         let fetches = do_fetch(vec![0..3], 0).await;
         assert_eq!(fetches, vec![0..3]);
 
