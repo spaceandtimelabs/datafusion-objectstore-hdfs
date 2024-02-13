@@ -78,9 +78,6 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
 
-      - name: Start emulated services
-        run: docker-compose up -d
-
       - name: Run tests
         run: |
           git submodule update --init --recursive
