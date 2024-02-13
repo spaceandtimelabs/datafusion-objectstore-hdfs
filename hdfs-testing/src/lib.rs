@@ -26,6 +26,7 @@ mod tests {
     use std::sync::Arc;
 
     use datafusion::assert_batches_eq;
+    use datafusion::common::stats::Precision::Exact;
     use datafusion::datasource::file_format::parquet::ParquetFormat;
     use datafusion::datasource::file_format::FileFormat;
     use datafusion::datasource::listing::PartitionedFile;
@@ -48,7 +49,7 @@ mod tests {
                 let location = get_path(&filename_hdfs, &hdfs_object_store.get_path_root());
                 let ret = hdfs_object_store.get(&location).await?;
                 let data = ret.bytes().await?;
-                assert!(data.len() > 0);
+                assert!(!data.is_empty());
 
                 Ok(())
             })
@@ -61,7 +62,7 @@ mod tests {
         run_hdfs_test("alltypes_plain.parquet".to_string(), |filename_hdfs| {
             Box::pin(async move {
                 let session_context =
-                    SessionContext::with_config(SessionConfig::new().with_batch_size(2));
+                    SessionContext::new_with_config(SessionConfig::new().with_batch_size(2));
                 let projection = None;
                 let exec =
                     get_hdfs_exec(&session_context, filename_hdfs.as_str(), &projection, None)
@@ -80,8 +81,8 @@ mod tests {
                 assert_eq!(tt_batches, 4 /* 8/2 */);
 
                 // test metadata
-                assert_eq!(exec.statistics().num_rows, Some(8));
-                assert_eq!(exec.statistics().total_byte_size, Some(671));
+                assert_eq!(exec.statistics().unwrap().num_rows, Exact(8));
+                assert_eq!(exec.statistics().unwrap().total_byte_size, Exact(671));
 
                 Ok(())
             })
@@ -97,7 +98,7 @@ mod tests {
                 // so we need an explicit cast
                 let sql = "SELECT id, CAST(string_col AS varchar) FROM alltypes_plain";
                 let actual = ctx.sql(sql).await?.collect().await?;
-                let expected = vec![
+                let expected = [
                     "+----+---------------------------+",
                     "| id | alltypes_plain.string_col |",
                     "+----+---------------------------+",
@@ -164,7 +165,6 @@ mod tests {
                     limit,
                     table_partition_cols: vec![],
                     output_ordering: vec![],
-                    infinite_source: false,
                 },
                 None,
             )
