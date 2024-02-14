@@ -19,7 +19,7 @@ Since the ``libhdfs`` is also just a C interface wrapper and the real implementa
 
 ### Prepare Hadoop client
 
-1. To get a Hadoop distribution, download a recent stable release from one of the [Apache Download Mirrors](http://www.apache.org/dyn/closer.cgi/hadoop/common). Currently, we support Hadoop-2 and Hadoop-3.
+1. To get a Hadoop distribution, download a recent stable release from one of the [Apache Download Mirrors](http://www.apache.org/dyn/closer.cgi/hadoop/common). Currently, we support Hadoop-3.
 
 2. Unpack the downloaded Hadoop distribution. For example, the folder is /opt/hadoop. Then prepare some environment variables:
 ```shell
@@ -72,15 +72,3 @@ git submodule update --init --recursive
 cargo test
 ```
 During the testing, a HDFS cluster will be mocked and started automatically.
-
-3. Run testing for with enabling feature hdfs3
-```shell
-cargo build --no-default-features --features datafusion-objectstore-hdfs/hdfs3,datafusion-objectstore-hdfs-testing/hdfs3,datafusion-hdfs-examples/hdfs3
-
-cargo test --no-default-features --features datafusion-objectstore-hdfs/hdfs3,datafusion-objectstore-hdfs-testing/hdfs3,datafusion-hdfs-examples/hdfs3
-```
-
-Run the ballista-sql test by
-```shell
-cargo run --bin ballista-sql --no-default-features --features hdfs3
-```

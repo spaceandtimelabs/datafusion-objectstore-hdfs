@@ -25,15 +25,9 @@ license = "Apache-2.0"
 readme = "../README.md"
 repository = "https://github.com/datafusion-contrib/datafusion-objectstore-hdfs"
 
-[features]
-default = ["hdfs"]
-hdfs = ["fs-hdfs"]
-hdfs3 = ["fs-hdfs3"]
-
 [dependencies]
 datafusion = { version = "35" }
-fs-hdfs = { version = "^0.1.12", optional = true }
-fs-hdfs3 = { version = "^0.1.12", optional = true }
+fs-hdfs3 = { version = "^0.1.12" }
 uuid = { version = "1.0", features = ["v4"] }
 
 [dev-dependencies]
