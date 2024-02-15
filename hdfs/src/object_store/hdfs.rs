@@ -141,7 +141,7 @@ impl PutPart for HdfsMultiPartUpload {
         let content = self.content.clone();
 
         maybe_spawn_blocking(move || {
-            let file = match hdfs.create_with_params(&location, true, 0, 3, 0) {
+            let file = match hdfs.create_with_overwrite(&location, true) {
                 Ok(f) => f,
                 Err(e) => {
                     return Err(to_error(e));
@@ -190,7 +190,7 @@ impl ObjectStore for HadoopFileSystem {
         let location = HadoopFileSystem::path_to_filesystem(location);
 
         maybe_spawn_blocking(move || {
-            let file = match hdfs.create_with_params(&location, overwrite, 0, 3, 0) {
+            let file = match hdfs.create_with_overwrite(&location, overwrite) {
                 Ok(f) => f,
                 Err(e) => {
                     return Err(to_error(e));
