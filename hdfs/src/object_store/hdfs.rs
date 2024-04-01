@@ -494,6 +494,25 @@ impl ObjectStore for HadoopFileSystem {
         })
         .await
     }
+
+    async fn rename_if_not_exists(&self, from: &Path, to: &Path) -> Result<()> {
+        let hdfs = self.hdfs.clone();
+        let from = HadoopFileSystem::path_to_filesystem(from);
+        let to = HadoopFileSystem::path_to_filesystem(to);
+
+        maybe_spawn_blocking(move || {
+            if hdfs.exist(&to) {
+                return Err(Error::AlreadyExists {
+                    path: from,
+                    source: Box::new(HdfsErr::FileAlreadyExists(to)),
+                });
+            }
+
+            hdfs.rename(&from, &to).map_err(to_error)?;
+            Ok(())
+        })
+        .await
+    }
 }
 
 /// Create Path without prefix
