@@ -465,7 +465,7 @@ impl ObjectStore for HadoopFileSystem {
         let to = HadoopFileSystem::path_to_filesystem(to);
 
         maybe_spawn_blocking(move || {
-            hdfs.rename(&from, &to).map_err(to_error)?;
+            hdfs.rename(&from, &to, true).map_err(to_error)?;
 
             Ok(())
         })
@@ -508,7 +508,7 @@ impl ObjectStore for HadoopFileSystem {
                 });
             }
 
-            hdfs.rename(&from, &to).map_err(to_error)?;
+            hdfs.rename(&from, &to, false).map_err(to_error)?;
             Ok(())
         })
         .await

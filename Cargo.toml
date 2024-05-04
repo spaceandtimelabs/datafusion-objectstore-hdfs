@@ -21,3 +21,6 @@ members = [
     "hdfs-testing",
 ]
 resolver = "2"
+
+[patch.crates-io]
+fs-hdfs3 = { git = "https://github.com/datafusion-contrib/fs-hdfs", branch = "rename_overwrite" }
